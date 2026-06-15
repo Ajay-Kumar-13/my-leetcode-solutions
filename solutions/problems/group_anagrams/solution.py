@@ -4,11 +4,15 @@ class Solution(object):
         :type strs: List[str]
         :rtype: List[List[str]]
         """
-        Anagrams = {}
-        for word in strs:
-            key = "".join(sorted(word))
-            if key not in Anagrams:
-                Anagrams[key] = []
-            Anagrams[key].append(word)
 
-        return Anagrams.values()
+        mappings = {}
+
+        for element in strs:
+            sortedEle = ''.join(sorted(element))
+            if sortedEle in mappings:
+                anagrams = mappings.get(sortedEle)
+                anagrams.append(element)
+            else:
+                mappings[sortedEle] = [element]
+
+        return list(mappings.values())
