@@ -4,32 +4,25 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[int]
         """
-        prefix = []
-        postfix = []
-        output = []
 
-        pre_product = 1
-        post_product = 1
+        suffixProd = 1
+        prefixProd = 1
+
+        suffixProducts = {}
+        prefixProducts = {}
+
+        answer = []
 
         for i in range(len(nums)):
-            product = nums[i] * pre_product
-            pre_product = product
-            prefix.append(product)
+            prefixProd *= nums[i]
+            prefixProducts[i] = prefixProd
 
-        for i in range(len(nums) - 1, -1, -1):
-            product = nums[i] * post_product
-            post_product = product
-            postfix.append(product)
+        for i in range(len(nums)-1, -1, -1):
+            suffixProd *= nums[i]
+            suffixProducts[i] = suffixProd
 
-        postfix.reverse()
-        
-        output.append(postfix[1])
+        for i in range(len(nums)):
+            prod = prefixProducts.get(i-1, 1) * suffixProducts.get(i+1, 1)
+            answer.append(prod)
 
-        for i in range(1, len(nums)-1):
-            product = postfix[i+1] * prefix[i-1]
-            output.append(product)
-
-        output.append(prefix[len(nums) - 2])
-
-        return output
-        
+        return answer
