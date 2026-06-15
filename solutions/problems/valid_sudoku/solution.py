@@ -4,34 +4,36 @@ class Solution(object):
         :type board: List[List[str]]
         :rtype: bool
         """
+        
+        # validate rows and coloums
+        
         for i in range(9):
-            s = set()
+            row = set()
+            col = set()
             for j in range(9):
-                num = board[i][j]
-                if num in s:
+                if board[i][j] == ".":
+                    continue
+                if board[i][j] in col:
                     return False
-                elif num != ".":
-                    s.add(num)
+                col.add(board[i][j])
 
-        for i in range(9):
-            s = set()
             for j in range(9):
-                num = board[j][i]
-                if num in s:
+                if board[j][i] == ".":
+                    continue
+                if board[j][i] in row:
                     return False
-                elif num != ".":
-                    s.add(num)
+                row.add(board[j][i])
+        # check subboxes
+        subgrids = [(0,3), (0,6), (0,9), (3, 3), (3, 6), (3, 9), (6, 3), (6, 6), (6, 9)]
 
-        starts= [(0,0), (0,3), (0,6), (3,0), (3,3), (3,6), (6,0), (6,3), (6,6)]
-
-        for i, j in starts:
-            s = set()
-            for row in range(i, i+3):
-                for col in range(j, j+3):
-                    num = board[row][col]
-                    if num in s:
+        for i, j in subgrids:
+            box = set()
+            for k in range(i, i+3):
+                for l in range(j-3, j):
+                    if board[k][l] == ".":
+                        continue
+                    if board[k][l] in box:
                         return False
-                    elif num != ".":
-                        s.add(num)
+                    box.add(board[k][l])
 
         return True
