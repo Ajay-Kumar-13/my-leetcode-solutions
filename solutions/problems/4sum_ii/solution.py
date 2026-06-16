@@ -7,26 +7,19 @@ class Solution(object):
         :type nums4: List[int]
         :rtype: int
         """
+        
+        leftArray = {}
 
-        first_array = []
-        second_array = []
-        count = 0
-        mappings = {}
+        answer = 0
 
-        for i,n1 in enumerate(nums1):
-            for j,n2 in enumerate(nums2):
-                sum1 = n1 + n2
-                sum2 = nums3[i] + nums4[j]
-                first_array.append(sum1)
-                second_array.append(sum2)
+        for i in range(len(nums1)):
+            for j in range(len(nums2)):
+                leftArray[nums1[i] + nums2[j]] = leftArray.get(nums1[i] + nums2[j], 0)+1
 
-        for s in first_array:
-            negative = 0 - s
-            if s not in mappings:
-                c = second_array.count(negative)
-                count += c
-                mappings[s] = c
-            else:
-                count += mappings.get(s)
-
-        return count
+        for i in range(len(nums3)):
+            for j in range(len(nums4)):
+                s = nums3[i] + nums4[j]
+                if 0-s in leftArray:
+                    val = leftArray.get(0-s)
+                    answer += val
+        return answer
