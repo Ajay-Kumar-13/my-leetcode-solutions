@@ -5,22 +5,15 @@ class Solution(object):
         :type k: int
         :rtype: int
         """
-        mappings = {}
-        mappings[0] = 1
-
-        count = 0
+        
+        frequency = {}
+        frequency[0] = 1
         total = 0
-
-        for element in nums:
-            total += element 
-            if (total - k) in mappings:
-                count += mappings.get(total-k)
-
-            if total not in mappings:
-                mappings[total] = 1
-            else:
-                mappings[total] += 1
-
-        return count
+        ans = 0
+        for x in nums:
+            total += x
+            ans += (frequency.get(total-k, 0))
+            frequency[total] = frequency.get(total, 0) + 1
             
-            
+
+        return ans 
