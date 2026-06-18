@@ -4,24 +4,22 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        mappings = {}
-        s = 0
-        count = 0
-
-        for i in range(len(nums)):
-            if nums[i] == 0:
-                s += -1
+        
+        frequency = {}
+        sums = {}
+        total = 0
+        maxLength = 0
+        for i,x in enumerate(nums):
+            frequency[x] = frequency.get(x, 0)+1
+            if x == 0:
+                x = -1
+            total += x
+            if total not in sums:
+                sums[total] = i
             else:
-                s += 1
+                maxLength = max(maxLength, i-sums.get(total))
 
-            if s in mappings:
-                count = max(count, i - mappings.get(s))
-            else:
-                mappings[s] = i
+            if total == 0:
+                maxLength = max(maxLength, i+1)
 
-            if s == 0:
-                count = max(count, i+1)
-            
-
-
-        return count
+        return maxLength
