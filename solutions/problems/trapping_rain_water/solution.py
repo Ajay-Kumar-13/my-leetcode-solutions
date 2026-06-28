@@ -5,29 +5,27 @@ class Solution(object):
         :rtype: int
         """
         
-        LM = 0
-        RM = 0
-        PrefixMaxArray = []
-        SuffixMaxArray = []
+        prefixMax = []
+        suffixMax = []
 
-        for element in height:
-            LM = max(LM, element)
-            PrefixMaxArray.append(LM)
+        maxPrefix = 0
+        maxSuffix = 0
 
-        for i in range(len(height) - 1, -1, -1):
-            RM = max(RM, height[i])
-            SuffixMaxArray.append(RM)
+        for h in height:
+            maxPrefix = max(maxPrefix, h)
+            prefixMax.append(maxPrefix)
 
-        SuffixMaxArray.reverse()
+        for i in range(len(height)-1, -1, -1):
+            maxSuffix = max(maxSuffix, height[i])
+            suffixMax.append(maxSuffix)
 
+        suffixMax.reverse()
 
-        total = 0
+        maxTrappedUnits = 0
 
-        for i in range(len(height)):
-            LeftMax = PrefixMaxArray[i]
-            RightMax = SuffixMaxArray[i]
+        for i,h in enumerate(height):
+            units = min(prefixMax[i], suffixMax[i]) - h
+            if units > 0:
+                maxTrappedUnits += units
 
-            total += (min(LeftMax, RightMax) - height[i])
-
-        return total
-
+        return maxTrappedUnits
