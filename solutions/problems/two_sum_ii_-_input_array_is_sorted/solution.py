@@ -5,12 +5,15 @@ class Solution(object):
         :type target: int
         :rtype: List[int]
         """
+        
+        i = 0
+        j = len(numbers) - 1
 
-        mappings = {}
-
-        for i in range(len(numbers)):
-            d = target - numbers[i]
-            if d not in mappings:
-                mappings[numbers[i]] = i
+        while i < j:
+            s = numbers[i] + numbers[j]
+            if s == target:
+                return [i+1, j+1]
+            elif s > target:
+                j -= 1
             else:
-                return [mappings.get(d)+1, i+1]
+                i += 1
