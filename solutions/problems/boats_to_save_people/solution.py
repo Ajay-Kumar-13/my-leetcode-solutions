@@ -5,28 +5,24 @@ class Solution(object):
         :type limit: int
         :rtype: int
         """
+        
         people.sort()
-
 
         i = 0
         j = len(people) - 1
-        count = 0
+
+        minBoats = 0
 
         while i <= j:
 
-            s = people[i] + people[j]
+            spaceLeft = limit - people[j]
 
-            if i == j:
-                i += 1
-            elif s <= limit:
+            if people[i] <= spaceLeft:
                 i += 1
                 j -= 1
             else:
-                if people[i] > people[j]:
-                    i += 1
-                else:
-                    j -= 1
-            
-            count += 1
-        
-        return count
+                j -= 1
+
+            minBoats += 1
+
+        return minBoats
