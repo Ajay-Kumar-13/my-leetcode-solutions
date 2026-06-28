@@ -4,33 +4,27 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        i = 0
-        j = i + 1
-        k = len(nums) - 1
-
         nums.sort()
 
-        output = []
+        ans = set()
 
-        while i < len(nums) - 2:
-            while j < k:
-                s = nums[i] + nums[j] + nums[k]
-                if s == 0:
-                    output.append([nums[i], nums[j], nums[k]])
+        for i in range(len(nums)-2):
+            k = nums[i]
+            left = i+1
+            right = len(nums)-1
 
-                if s <= 0:
-                    while nums[j] == nums[j+1] and j < len(nums) - 2:
-                        j += 1
-                    j += 1
-                elif s >= 0:
-                    while nums[k] == nums[k-1] and k > i:
-                        k -= 1
-                    k -= 1
-            
-            while nums[i] == nums[i+1] and i < len(nums) -2:
-                i += 1
-            i += 1
-            j = i + 1
-            k = len(nums) - 1
+            while left < right:
 
-        return output
+                s = nums[left] + nums[right]
+
+                if s == -(k):
+                    ans.add((nums[left], nums[right], k))
+                    left += 1
+                    right -= 1
+                elif s < -(k):
+                    left += 1
+                else:
+                    right -= 1
+
+        return list(ans)
+        
