@@ -6,49 +6,30 @@ class Solution(object):
         :rtype: str
         """
         
-        start = 0
-        end = 0
-
-        frequency = {}
-        for x in t:
-            frequency[x] = frequency.get(x, 0) + 1
-
-        requirement = len(frequency)
-        m = len(s)
-        n = len(t)
-
-        i = 0
-
-        while s[i] not in frequency and i < m-1:
-            i += 1
-            
-        j = i
-
-        diff = float('inf')
-
-        window = {}
+        tfreq = {}
+        for element in t:
+            tfreq[element] = tfreq.get(element, 0) + 1
+        
+        requirement = len(tfreq)
         formed = 0
-
-        while i <= j:
-            while formed < requirement and j < m:
-                char = s[j]
-                window[char] = window.get(char, 0) + 1
-                if char in frequency and window.get(char) == frequency.get(char):
-                    formed += 1
-                j += 1
-            if formed == requirement and diff > (j+1-i):
-                diff = j+1-i
-                start = i
-                end = j
+        sfreq = {}
+        ans = ""
+        i = 0
+        minString = s
+        
+        for j in range(len(s)):
             
-            if i < m:
-                window[s[i]] = window.get(s[i]) - 1
-                if window.get(s[i]) < frequency.get(s[i]):
+            sfreq[s[j]] = sfreq.get(s[j], 0)+1
+            if sfreq.get(s[j]) == tfreq.get(s[j]):
+                formed += 1
+                
+            while formed == requirement and i <= j:
+                if len(s[i:j+1]) <= len(minString):
+                    minString = s[i:j+1]
+                    ans = minString
+                if sfreq.get(s[i]) >= tfreq.get(s[i], 0) and sfreq.get(s[i]) - 1 < tfreq.get(s[i], 0) and formed > 0:
                     formed -= 1
-            
-            i += 1
-            while i < m - 1 and s[i] not in frequency:
+                sfreq[s[i]] = sfreq.get(s[i])-1
                 i += 1
-    
-
-        return s[start:end]
+                
+        return ans
