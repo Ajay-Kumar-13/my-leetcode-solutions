@@ -5,25 +5,25 @@ class Solution(object):
         :type k: int
         :rtype: int
         """
-        frequency = {}
+
+        total = 0
+        ans = 0
+        fliped = 0
         i = 0
-        
-        j = 0
-        
-        maxi = 0
-        
-        while j < len(nums):
+        for j in range(len(nums)):
             
-            if nums[j] != 0:
-                frequency[1] = frequency.get(1, 0)+1
+            if nums[j] == 0:
+                fliped += 1
             
-            j += 1
+            total += 1
             
-            if (j-i) - frequency.get(1, 0) > k:
-                if nums[i] == 1:
-                    frequency[nums[i]] = frequency.get(1, 0) - 1
+            if fliped <= k:
+                ans = max(ans, total)
+
+            while fliped > k:
+                if nums[i] == 0:
+                    fliped -= 1
+                total -= 1
                 i += 1
-            else:
-                maxi = max(maxi, (j-i))
         
-        return maxi
+        return ans
