@@ -8,34 +8,40 @@ class Solution(object):
 
         if len(s1) > len(s2):
             return False
-
-        j = 0
-        frequency = {}
-        s1Frequency = {}
-
-        for x in s1:
-            s1Frequency[x] = s1Frequency.get(x, 0) + 1
-
-        while j < len(s1):
-            frequency[s2[j]] = frequency.get(s2[j], 0) + 1
-            j += 1
-
-        k = 0
+        
+        s1_freq = {}
+        
+        for element in s1:
+            s1_freq[element] = s1_freq.get(element, 0)+1
+            
+        window = {}
+        
+        formed = 0
+        requirement = len(s1_freq)
+        
         i = 0
-
-        while j <= len(s2):
-            freq = frequency.get(s1[k], 0)
-            if freq == s1Frequency.get(s1[k]):
-                k += 1
-                if k == len(s1):
-                    return True
-            else:
-                if j == len(s2):
-                    return False
-                k = 0
-                frequency[s2[i]] = frequency.get(s2[i], 0) - 1
-                i += 1
-                frequency[s2[j]] = frequency.get(s2[j], 0) + 1
-                j += 1
-
+        while i < len(s1):
+            window[s2[i]] = window.get(s2[i], 0)+1
+            if window.get(s2[i]) == s1_freq.get(s2[i]) :
+                formed += 1
+            if formed == requirement:
+                return True
+            i += 1
+        
+        
+            
+        while i < len(s2):
+            j = i - len(s1)
+            if window.get(s2[j]) >= s1_freq.get(s2[j], 0) and window.get(s2[j]) - 1 < s1_freq.get(s2[j], 0) and formed > 0:
+                formed -= 1
+            window[s2[j]] = window.get(s2[j]) - 1
+            if window.get(s2[j]) == 0:
+                del window[s2[j]]
+            window[s2[i]] = window.get(s2[i], 0)+1
+            if window.get(s2[i]) == s1_freq.get(s2[i]):
+                formed += 1
+            if formed == requirement:
+                return True
+            i += 1
+            
         return False
