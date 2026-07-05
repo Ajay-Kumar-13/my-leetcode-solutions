@@ -5,26 +5,20 @@ class Solution(object):
         :type k: int
         :rtype: int
         """
+        
+        total = 1
         i = 0
-        j = 0
+        ans = 0
+        
+        for j,n in enumerate(nums):
+            total *= n
+            if total < k:
+                ans += (j-i+1)
+            else:
+                while total >= k and i < j:
+                    total //= nums[i]
+                    i += 1
+                if total < k:
+                    ans += (j-i+1)
 
-        count = 0
-
-        product = 1
-
-        while j < len(nums):
-
-            product *= nums[j]
-
-
-            while product >= k and i < j:
-                product /= nums[i]
-                i += 1
-                
-            
-            if product < k:
-                count += j-i+1
-
-            j += 1
-            
-        return count
+        return ans
