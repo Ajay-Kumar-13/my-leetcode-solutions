@@ -1,73 +1,67 @@
 class Solution(object):
-
-    def insert(self, heap, element):
-        heap.append(element)
-        index = len(heap)-1
-        while index > 0 and heap[(index-1)//2][1] < heap[index][1]:
-            heap[index], heap[(index-1)//2] = heap[(index-1)//2], heap[index]
-            index = (index-1)//2
-
-    def pop(self, heap):
-        if len(heap) < 2:
-            return heap
-        
-        heap[0], heap[-1] = heap[-1], heap[0]
-        heap.pop()
-
-        p = 0
-        l = 1
-        r = 2 
-
-        while l < len(heap) or r < len(heap):
-            if l < len(heap) and r < len(heap):
-                if heap[l][1] <= heap[p][1] and heap[r][1] <= heap[p][1]:
-                    break
-                if heap[l][1] < heap[r][1]:
-                    heap[p], heap[r] = heap[r], heap[p]
-                    p = r
-                else:
-                    heap[p], heap[l] = heap[l], heap[p]
-                    p = l
-            elif l < len(heap):
-                if heap[l][1] <= heap[p][1]:
-                    break
-                if heap[p][1] < heap[l][1]:
-                    heap[p], heap[l] = heap[l], heap[p]
-                    p = l
-            elif r < len(heap):
-                if heap[r][1] <= heap[p][1]:
-                    break
-                if heap[p][1] < heap[r][1]:
-                    heap[p], heap[r] = heap[r], heap[p]
-                    p = r
-            l = p*2+1
-            r = p*2+2
-
-
     def maxSlidingWindow(self, nums, k):
-        """
-        :type nums: List[int]
-        :type k: int
-        :rtype: List[int]
-        """
+        # Insert into the heap
+        def insert(heap, index):
+            heap.append((nums[index], index))
+            index = len(heap) - 1
+            while index > 0 and heap[(index-1)//2][0] < heap[index][0]:
+                heap[(index-1) // 2], heap[index] = heap[index], heap[(index-1) // 2]
+                index = (index - 1) // 2    
+        # Delete the element and heapify the entire heap. 
+        def pop(heap):
+            # swap this element in ith index with the last index
+            heap[-1], heap[0] = heap[0], heap[-1]
+            # now pop the last element
+            heap.pop()
+            i = 0
+            while True:
+                # find children of that node
+                left_child = 2*i+1
+                right_child = 2*i+2
+                # If node has two childrens, swap with the max node
+                if len(heap) > left_child and len(heap) > right_child:
+                    if heap[left_child][0] <= heap[i][0] and heap[right_child][0] <= heap[i][0]:
+                        break
+                    if heap[left_child][0] > heap[right_child][0]:
+                        heap[i], heap[left_child] = heap[left_child], heap[i]
+                        i = left_child
+                    else:
+                        heap[i], heap[right_child] = heap[right_child], heap[i]
+                        i = right_child
+                # If node has only one left child
+                elif len(heap) > left_child:
+                    if heap[left_child][0] >= heap[i][0]:
+                        heap[i], heap[left_child] = heap[left_child], heap[i]
+                        i = left_child
+                    else:
+                        break
+                # If node has only one right child
+                elif len(heap) > right_child:
+                    if heap[right_child][0] >= heap[i][0]:
+                        heap[i], heap[right_child] = heap[right_child], heap[i]
+                        i = right_child   
+                    else:
+                        break
+                # If node is a left node
+                else:
+                    break
+        # heap array
         heap = []
-
+        # For storing the max elements in the each window
+        ans = []
         for i in range(k):
-            self.insert(heap, (i, nums[i]))
-        
+            insert(heap, i)
+        ans.append(heap[0][0])
+
         i = 0
         j = k
-        ans = [heap[0][1]]
-
         while j < len(nums):
-
-            self.insert(heap, (j,nums[j]))
-            i += 1
+            insert(heap, j)
             j += 1
+            i += 1
 
-            while heap[0][0] < i:
-                self.pop(heap)
-
-            ans.append(heap[0][1])
-
+            while heap[0][1] < i:
+                pop(heap)
+            
+            ans.append(heap[0][0])
         return ans
