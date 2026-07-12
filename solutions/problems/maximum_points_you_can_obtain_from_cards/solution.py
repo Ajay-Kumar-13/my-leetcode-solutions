@@ -6,25 +6,24 @@ class Solution(object):
         :rtype: int
         """
         
-        total_sum = sum(cardPoints)
-
         window_length = len(cardPoints) - k
 
-        
+        s = 0
+        min_sum = 0
+        total = sum(cardPoints)
 
-        score = 0
         for i in range(window_length):
-            score += cardPoints[i]
+            s += cardPoints[i]
 
-        i = 1
+        min_sum = s
+        i = 0
         j = window_length
-        min_score = score
+
         while j < len(cardPoints):
-            score -= cardPoints[i-1]
-            score += cardPoints[j]
-
-            min_score = min(min_score, score)
-            j += 1
+            s -= cardPoints[i]
+            s += cardPoints[j]
             i += 1
+            j += 1
+            min_sum = min(s, min_sum)
 
-        return total_sum - min_score
+        return total-min_sum
