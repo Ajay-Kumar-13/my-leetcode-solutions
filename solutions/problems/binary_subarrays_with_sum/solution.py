@@ -5,14 +5,18 @@ class Solution(object):
         :type goal: int
         :rtype: int
         """
-        frequency = {}
-        frequency[0] = 1
+        
         total = 0
-        ans = 0
-        for x in nums:
-            total += x
-            ans += (frequency.get(total-goal, 0))
-            frequency[total] = frequency.get(total, 0) + 1
-            
+        
+        sums = {}
+        sums[0] = 1
 
-        return ans 
+        s = 0
+
+        for element in nums:
+            s += element
+            val = (s - goal)
+            total += sums.get(val, 0)
+            sums[s] = sums.get(s, 0)+1
+
+        return total
