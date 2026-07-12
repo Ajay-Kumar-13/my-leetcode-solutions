@@ -6,31 +6,34 @@ class Solution(object):
         :type minutes: int
         :rtype: int
         """
-        # Unsatisfied In Window
-        USIW = 0 
-        # Satisfied In Total
-        SIT = 0
-        # Max Unsatisfied
-        MXUS = 0
+        
+        satisfied_customers = 0
+
+        max_unsatisfied_customers = 0
 
         for i in range(minutes):
             if grumpy[i] == 0:
-                SIT += customers[i]
-            elif grumpy[i] == 1:
-                USIW += customers[i]
+                satisfied_customers += customers[i]
+            else:
+                max_unsatisfied_customers += customers[i]
 
-        MXUS = USIW
         i = 1
         j = minutes
+
+        max_unsatisfied_customers_in_window = max_unsatisfied_customers
+
         while j < len(customers):
             if grumpy[i-1] == 1:
-                USIW -= customers[i-1]
+                max_unsatisfied_customers_in_window -= customers[i-1]
+                
             if grumpy[j] == 1:
-                USIW += customers[j]
-            if grumpy[j] == 0:
-                SIT += customers[j]
-            MXUS = max(MXUS, USIW)
-            j += 1
+                max_unsatisfied_customers_in_window += customers[j]
+            else:
+                satisfied_customers += customers[j]
+                
+            max_unsatisfied_customers = max(max_unsatisfied_customers_in_window, max_unsatisfied_customers)
+            
             i += 1
-
-        return SIT + MXUS
+            j += 1
+        
+        return satisfied_customers+max_unsatisfied_customers
