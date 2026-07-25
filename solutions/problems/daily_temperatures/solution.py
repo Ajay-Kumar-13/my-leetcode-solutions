@@ -4,17 +4,15 @@ class Solution(object):
         :type temperatures: List[int]
         :rtype: List[int]
         """
-        ans = [0]
-        coolTemp = [0]
-        
-        for i in range(1, len(temperatures)):
-            ans.append(0)
-            if temperatures[i] < temperatures[coolTemp[-1]]:
-                coolTemp.append(i)
-            else:
-                while len(coolTemp) > 0 and temperatures[i] > temperatures[coolTemp[-1]]:
-                    ans[coolTemp[-1]] = i - coolTemp[-1]
-                    coolTemp.pop()
-                coolTemp.append(i)
+        nextGreater = [0]*len(temperatures)
 
-        return ans
+        stack = []
+
+        for i, temp in enumerate(temperatures):
+            while len(stack) > 0 and temp > stack[-1][0]:
+                nextGreater[stack[-1][1]] = i - stack[-1][1] 
+                stack.pop()
+            
+            stack.append((temp, i))
+
+        return nextGreater
