@@ -6,27 +6,24 @@ class Solution(object):
         :rtype: int
         """
 
-        def kokoCanFinishAllBananas(k, h):
-            
+        def isPossible(k):
+            hours = 0
             for pile in piles:
-                h -= ((pile + k - 1) // k)
-
-            if h < 0:
-                return False
-
-            return True
+                hours += ((pile + k - 1) // k)
+            
+            return hours
         
-        r = max(piles)
-        l = 1
-        finishedInHours = r
-
-        while l <= r:
-            k = (l+r) // 2
-
-            if kokoCanFinishAllBananas(k, h):
-                finishedInHours = min(finishedInHours, k)
-                r = k - 1
+        i = 1
+        j = max(piles)
+        k = j
+        while i <= j:
+            mid = (i + j) // 2
+            hours = isPossible(mid)
+            
+            if hours <= h:
+                k = min(k, mid)
+                j = mid - 1
             else:
-                l = k + 1
+                i = mid + 1
 
-        return finishedInHours
+        return k 
