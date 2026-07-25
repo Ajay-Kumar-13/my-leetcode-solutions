@@ -5,7 +5,6 @@
 #         self.left = left
 #         self.right = right
 class Solution(object):
-
     def buildTree(self, preorder, inorder):
         """
         :type preorder: List[int]
@@ -13,36 +12,40 @@ class Solution(object):
         :rtype: Optional[TreeNode]
         """
 
-        inOrderIndex = {}
-        for i in range(len(inorder)):
-            inOrderIndex[inorder[i]] = i
+        inorder_ind = {}
 
-        def insert(root, node, left, right):
-            newIndex = inOrderIndex.get(node.val)
-            index = inOrderIndex.get(root.val)
-            if newIndex >= left and newIndex < index:
-                if not root.left:
-                    root.left = node
+        for i in range(len(preorder)):
+            inorder_ind[inorder[i]] = i
+
+        def insert(root, val, left, mid, right):
+
+            if not root:
+                return TreeNode(val)
+
+            position = inorder_ind.get(val)
+
+            if position < mid and position >= left:
+                if root.left is None:
+                    root.left = TreeNode(val)
                     return root
-                if insert(root.left, node, left, index):
-                    return
+                if insert(root.left, val, left, inorder_ind.get(root.left.val) ,mid):
+                    return root
             
-            if newIndex > index and newIndex <= right:
-                if not root.right:
-                    root.right = node
+            if position > mid and position <= right:
+                if root.right is None:
+                    root.right = TreeNode(val)
                     return root
-                if insert(root.right, node, index, right):
-                    return
+                if insert(root.right, val, mid, inorder_ind.get(root.right.val) ,right):
+                    return root
 
-            return None 
+            return root
 
-        left = 0
-        right = len(inorder) - 1
 
-        root = TreeNode(preorder[0])
+        
+        root = None
 
-        for i in range(1, len(preorder)):
-            newNode = TreeNode(preorder[i])
-            insert(root, newNode, left, right)
+        for i in range(len(preorder)):
+            rootPos = inorder_ind.get(preorder[0])
+            root = insert(root, preorder[i], 0, rootPos, len(preorder)-1)
 
         return root
