@@ -1,68 +1,40 @@
 class Solution:
-    
-    def __init__(self):
-        self.ans = []
-        self.frequency = {}
-        
-    def isValid(self, paranthesis):
+    def generateParenthesis(self, n: int) -> List[str]:
+        def validParenthesis(parenthesis):
+            stack = []
 
-        if len(paranthesis) < 2:
-            return False
-            
-        stack = []
-        top = -1
-        
-        keys = {
-            "(":")",
-        }
-        
-        i = 0
-        
-        while i < len(paranthesis):
-            if keys.get(paranthesis[i]):
-                stack.append(paranthesis[i])
-                top += 1
-            elif top >= 0 and keys.get(stack[top]) == paranthesis[i]:
-                stack.pop()
-                top -= 1
-            else:
-                return False
-            i += 1
-        
-        if top != -1:
+            for element in parenthesis:
+                if len(stack) > 0 and stack[-1] == "(" and element is ")":
+                    stack.pop()
+                else:
+                    stack.append(element)
+
+            if len(stack) == 0:
+                return True
+
             return False
 
-        return True
-    
-    def backtrack(self, n, parantheses):
+        answer = set([])
+
+        def generateCombinations(n, parenthesis):
+
+            if len(parenthesis) == n*2:
+                print(''.join(parenthesis))
+                if validParenthesis(parenthesis):
+                    answer.add(''.join(parenthesis))
+                return
+
+            parenthesis.append("(")
+            generateCombinations(n, parenthesis) 
+
+            parenthesis.pop()
+            parenthesis.append(")")
+            generateCombinations(n, parenthesis) 
+
+            parenthesis.pop()
+
+            return 
+
         
-        # Base case
-        if len(parantheses) == n*2:
-            if self.isValid(parantheses):
-                self.ans.append(''.join(parantheses))
-            return
-        
-        # Decision 1: Include (
-        count = self.frequency.get('(', 0)
-        if count < n:
-            parantheses.append('(')
-            self.frequency['('] = self.frequency.get('(', 0)+1
-            self.backtrack(n, parantheses)
-            ele = parantheses.pop()
-            self.frequency[ele] = self.frequency.get(ele) - 1
-            
-        
-        # Decision 2: Include )
-        count = self.frequency.get(')', 0)
-        if count < n:
-            parantheses.append(')')
-            self.frequency[')'] = self.frequency.get(')', 0)+1
-            self.backtrack(n, parantheses)
-            ele = parantheses.pop()
-            self.frequency[ele] = self.frequency.get(ele) - 1
-            
-        return
-    
-    def generateParenthesis(self, n):
-        self.backtrack(n, [])
-        return self.ans
+        generateCombinations(n, [])
+        return list(answer)
