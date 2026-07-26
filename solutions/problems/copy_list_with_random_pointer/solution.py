@@ -1,56 +1,46 @@
 """
 # Definition for a Node.
 class Node:
-    def __init__(self, x, next=None, random=None):
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
         self.val = int(x)
         self.next = next
         self.random = random
 """
 
-class Solution(object):
-    def copyRandomList(self, head):
-        """
-        :type head: Node
-        :rtype: Node
-        """
-
-        random_nodes = {}
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         
-        dummy = Node(0)
+        nodes = {}
 
+        if not head:
+            return None
+    
+        newHead = None
+        
         temp1 = head
-        temp2 = dummy
+        temp2 = newHead
 
-        while temp1 is not None:
+        while temp1:
             
-            newNode = Node(temp1.val)
+            node = nodes.get(temp1, None)
+            if node is None:
+                node = Node(temp1.val)
+                nodes[temp1] = node
 
-            previousNode = random_nodes.get(temp1, None) 
-            randomNode = None
-            if temp1.random:
-                randomNode = random_nodes.get(temp1.random, None)
-
-            if previousNode is not None:
-                newNode = previousNode
-            
-            temp2.next = newNode
-
-            random_nodes[temp1] = newNode
-
-            if temp1.random is None:
-                temp2.next.random = None
-            elif randomNode:
-                temp2.next.random = randomNode
+            if newHead is None:
+                newHead = node
+                temp2 = newHead
             else:
-                newNode = Node(temp1.random.val)
-                if temp1.random:
-                    randomNode = random_nodes.get(temp1.random, None)
-                    if randomNode:
-                        newNode = randomNode
-                random_nodes[temp1.random] = newNode
-                temp2.next.random = newNode
+                temp2.next = node
+                temp2 = temp2.next
+
+            randomNode = nodes.get(temp1.random, None)
+            if randomNode is None and temp1.random is not None:
+                randomNode = Node(temp1.random.val)
+                nodes[temp1.random] = randomNode
+            
+            temp2.random = randomNode
 
             temp1 = temp1.next
-            temp2 = temp2.next
 
-        return dummy.next
+        return newHead
