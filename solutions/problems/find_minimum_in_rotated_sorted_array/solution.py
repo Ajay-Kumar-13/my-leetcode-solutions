@@ -1,25 +1,20 @@
-class Solution(object):
-    def findMin(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: int
-        """
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
         i = 0
         j = len(nums) - 1
-        
-        if nums[i] < nums[j]:
-            return nums[i]
-        elif len(nums) == 1:
-            return nums[0]
-        
-        while i <= j:
+
+        while i < j:
             mid = (i+j)//2
-            
-            if nums[i] > nums[mid]:
-                j = mid - 1
-                if nums[mid] < nums[j]:
-                    return nums[mid]
+
+            if nums[mid-1] > nums[mid]:
+                return nums[mid]
+
+            if nums[i] < nums[mid]:
+                i = mid
             else:
-                i = mid + 1
-                if nums[mid] > nums[i]:
-                    return nums[i]
+                j = mid
+        
+        if nums[0] > nums[len(nums)-1]:
+            return nums[len(nums)-1]
+        else:
+            return nums[0]
