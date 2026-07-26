@@ -1,27 +1,25 @@
-class Solution(object):
-    def searchMatrix(self, matrix, target):
-        """
-        :type matrix: List[List[int]]
-        :type target: int
-        :rtype: bool
-        """
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
         
+        n = (len(matrix) * len(matrix[0]))-1
+
         i = 0
-        m = len(matrix)
-        n = len(matrix[0])
-        j = m * n - 1
+        j = n
 
         while i <= j:
-            mid = (i + j) // 2
+            mid = (i+j) // 2
 
-            row = mid // n
-            col = mid % n
+            row = mid // len(matrix[0])
+            col = mid % len(matrix[0])
 
-            if target == matrix[row][col]:
+            if matrix[row][col] == target:
                 return True
-            elif target > matrix[row][col]:
-                i = mid + 1
-            else:
+
+            if matrix[row][col] > target:
                 j = mid - 1
-                        
+            else:
+                i = mid + 1
+
         return False
+
+            
