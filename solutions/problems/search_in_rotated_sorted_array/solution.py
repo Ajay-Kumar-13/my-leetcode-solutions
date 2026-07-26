@@ -1,27 +1,24 @@
-class Solution(object):
-    def search(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: int
-        """
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
         
         i = 0
-        j = len(nums) - 1
+        j = len(nums)-1
+
+        length = len(nums)-1
 
         while i <= j:
-            mid = (i + j) // 2
+            mid = (i+j)//2
+
             if nums[mid] == target:
                 return mid
-            if nums[i] < nums[mid] and nums[i] <= target and target <= nums[mid]:
+
+            if nums[mid] >= nums[i] and target >= nums[i] and target <= nums[mid]:
                 j = mid - 1
-            elif nums[i] < nums[mid]:
+            elif nums[mid] <= nums[j] and target >= nums[mid] and target <= nums[j]:
                 i = mid + 1
-            elif nums[mid] < nums[j] and nums[mid] <= target and target <= nums[j]:
+            elif nums[mid] >= nums[i]:
                 i = mid + 1
-            elif nums[mid] < nums[j]:
-                j = mid - 1
             else:
-                i = mid+1
-            
+                j = mid - 1
+
         return -1
