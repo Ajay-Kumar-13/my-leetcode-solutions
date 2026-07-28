@@ -3,7 +3,7 @@ class Solution:
 
         coinsdict = {}
         
-        def bestOf(amount, coins):
+        def bestOf(amount):
             if amount <= 0:
                 return 0
 
@@ -19,7 +19,7 @@ class Solution:
                 elif balance == 0:
                     dp.append(1)
                 elif balance > 0:
-                    best = bestOf(balance, coins)
+                    best = bestOf(balance)
                     if best != -1:
                         minimumCoins = 1+best
                         dp.append(minimumCoins)
@@ -31,4 +31,4 @@ class Solution:
                 coinsdict[amount] = -1
                 return -1
 
-        return bestOf(amount, coins)
+        return bestOf(amount)
