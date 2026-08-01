@@ -1,28 +1,24 @@
 class Solution:
     def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
-                # if there is only a single position
-        if len(position) < 2:
-            return 1
-            
-        # Map cars with their speeds
-        carSpeed = {}
-        for i,x in enumerate(position):
-            carSpeed[x] = speed[i]
         
-        # sort the array 
-        position.sort()
-        
-        
+        stack = []
+
         n = len(position)
-        
-        timeTakenByTheCar = []
-        
+
+        cars_stats = {}
+
         for i in range(n):
-            time = (target-position[i]) / carSpeed.get(position[i])
+            cars_stats[position[i]] = speed[i]
+
+        position.sort()
+
+        for i in range(n):
+            fleet = 0
+            t = (target-position[i])/cars_stats.get(position[i])
+
+            while len(stack) > 0 and stack[-1] <= t:
+                stack.pop()
             
-            while len(timeTakenByTheCar) > 0 and time >= timeTakenByTheCar[-1]:
-                timeTakenByTheCar.pop()
-                    
-            timeTakenByTheCar.append(time)
-            
-        return len(timeTakenByTheCar)
+            stack.append(t)
+
+        return len(stack)
