@@ -1,47 +1,59 @@
 # Definition for singly-linked list.
-# cl    ass ListNode(object):
+# class ListNode:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-class Solution(object):
-    def reorderList(self, head):
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
         """
-        :type head: Optional[ListNode]
-        :rtype: None Do not return anything, modify head in-place instead.
+        Do not return anything, modify head in-place instead.
         """
-        # Find the middle of linked list
-        temp = head
-        slow = temp
-        fast = temp.next
+        
+        prev = head
+        slow = head
+        fast = head
 
         while fast and fast.next:
+            prev = slow
             slow = slow.next
             fast = fast.next.next
 
-        head2 = slow.next
-        slow.next = None
+        # Break the list
+        prev.next = None
 
-        # Reverse the second half
+        head1 = head
+        head2 = slow
+
+        # reverse the second list
+
         temp = head2
-        beforeNode = None
         prev = None
-        while temp is not None:
+        next = temp.next
+        while next:
+            temp.next = prev
             prev = temp
-            temp = temp.next
-            prev.next = beforeNode
-            beforeNode = prev
+            temp = next
+            next = next.next
+        
+        temp.next = prev
+        head2 = temp
 
+        # re-order the list
 
-        # merge the two lists
-        first = head
-        second = prev
-        while second:
-            
-            temp1 = first.next
-            temp2 = second.next
-            
-            first.next = second
-            second.next = temp1
-            
-            first = temp1
-            second = temp2
+        next1 = head1
+        next2 = head2
+
+        i = 0
+        while next1 and next2 and next1 != next2:
+ 
+            if i % 2 != 0:
+                prev = next2
+                next2 = next2.next
+                next = next1
+                prev.next = next
+            else:
+                prev = next1
+                next1 = next1.next
+                next = next2
+                prev.next = next
+            i += 1
