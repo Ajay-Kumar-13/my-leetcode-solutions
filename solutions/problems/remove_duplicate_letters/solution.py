@@ -1,36 +1,26 @@
-class Solution(object):
-    def removeDuplicateLetters(self, s):
-        """
-        :type s: str
-        :rtype: str
-        """
+class Solution:
+    def removeDuplicateLetters(self, s: str) -> str:
         
+    
         frequency = {}
-        
+
+        for ele in s:
+            frequency[ele] = frequency.get(ele, 0)+1 
+
         stack = []
         
-        stackFreq = {}
-        
-        
-        for element in s:
-            frequency[element] = frequency.get(element, 0) + 1
-        
-        for element in s:
 
-            frequency[element] = frequency.get(element, 0) - 1
-
-            if stackFreq.get(element) > 0:
-                continue
+        for ele in s:
             
-            while len(stack) > 0 and stack[-1] > element and frequency.get(stack[-1]) >= 1:
-                stackFreq[stack[-1]] = stackFreq.get(stack[-1], 0) - 1
-                stack.pop()
+            if ele not in stack:
+                while len(stack) > 0 and frequency.get(stack[-1]) > 0 and stack[-1] > ele:
+                    top = stack.pop()
+
+                stack.append(ele)
                 
-            if stackFreq.get(element, 0) <= 0:
-                stack.append(element)
-                stackFreq[element] = stackFreq.get(element, 0) + 1
-            
-            
-            
-        
-        return ''.join(stack)
+            frequency[ele] = frequency.get(ele) - 1
+
+        if stack:
+            return "".join(stack)
+
+        return ''
