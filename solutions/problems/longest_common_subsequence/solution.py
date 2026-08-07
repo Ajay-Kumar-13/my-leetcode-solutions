@@ -6,7 +6,6 @@ class Solution:
             return 0
         elif dp[ind1][ind2] != -1:
             return dp[ind1][ind2]
-
         
         if text1[ind1] == text2[ind2]:
             dp[ind1][ind2] = 1 + self.getLongestLength(ind1+1, ind2+1, text1, text2, dp)
