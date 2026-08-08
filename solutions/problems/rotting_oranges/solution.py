@@ -1,48 +1,53 @@
 from collections import deque
 
-class Solution(object):
-    def orangesRotting(self, grid):
-        """
-        :type grid: List[List[int]]
-        :rtype: int
-        """
-        
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+
+        q = deque([])
+
         m = len(grid)
         n = len(grid[0])
 
-        total_oranges = 0
-
-        rottenOranges = deque([])
+        totalOranges = 0
 
         for i in range(m):
             for j in range(n):
                 if grid[i][j] != 0:
-                    total_oranges += 1
+                    totalOranges += 1
                 if grid[i][j] == 2:
-                    rottenOranges.append([i, j, 0])
+                    q.append((i, j, 0))
 
-        processedOranges = 0
+        rottenOranges = len(q)
+        totalMinutes = 0
 
-        min_time = 0
+        visited = set(q)
 
-        while len(rottenOranges) > 0:
-            i, j, t = rottenOranges.popleft()
-            processedOranges += 1
-            min_time = max(min_time, t)
-            if i < m-1 and grid[i+1][j] == 1:
-                rottenOranges.append([i+1, j, t+1])
-                grid[i+1][j] = 2
-            if j < n-1 and grid[i][j+1] == 1:
-                rottenOranges.append([i, j+1, t+1])
-                grid[i][j+1] = 2
-            if i > 0 and grid[i-1][j] == 1:     
-                rottenOranges.append([i-1, j, t+1])
-                grid[i-1][j] = 2
-            if j > 0 and grid[i][j-1] == 1:
-                rottenOranges.append([i, j-1, t+1])
-                grid[i][j-1] = 2
+        while len(q) > 0:
+            u,v,t = q.popleft()
+            totalMinutes = max(totalMinutes, t)
 
-        if processedOranges == total_oranges:
-            return min_time
+            if v < n-1 and grid[u][v+1] == 1 and (u, v+1) not in visited:
+                q.append((u, v+1, t+1))
+                visited.add((u, v+1))
+                rottenOranges += 1
 
-        return -1
+            if v > 0 and grid[u][v-1] == 1 and (u, v-1) not in visited:
+                q.append((u, v-1, t+1))
+                visited.add((u, v-1))
+                rottenOranges += 1
+
+            if u < m-1 and grid[u+1][v] == 1 and (u+1, v) not in visited:
+                q.append((u+1, v, t+1))
+                visited.add((u+1, v))
+                rottenOranges += 1
+
+            if u > 0 and grid[u-1][v] == 1 and (u-1, v) not in visited:
+                q.append((u-1, v, t+1))
+                visited.add((u-1, v))
+                rottenOranges += 1
+
+        print(totalOranges, rottenOranges)
+        if rottenOranges != totalOranges:
+            return -1
+
+        return totalMinutes
