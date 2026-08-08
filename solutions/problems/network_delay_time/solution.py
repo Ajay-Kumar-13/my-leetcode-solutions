@@ -1,47 +1,45 @@
 import heapq
 
-class Solution(object):
-    def networkDelayTime(self, times, n, k):
-        """
-        :type times: List[List[int]]
-        :type n: int
-        :type k: int
-        :rtype: int
-        """
-
-        outgoingEdges = {}
+class Solution:
+    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+        
         distances = {}
+        edges = {}
 
         for i in range(1, n+1):
-            outgoingEdges[i] = []
-            distances[i] = float('inf')
-
-        distances[k] = 0
+            distances[i] = float("inf")
+            if i == k:
+                distances[i] = 0
 
         for edge in times:
-            outgoingEdges.setdefault(edge[0], []).append([edge[0], edge[1], edge[2]])
+            edges.setdefault(edge[0], []).append((edge[1], edge[2]))
+            if edges.get(edge[1], None) is None:
+                edges[edge[1]] = []
 
-        visited = set()
+        heap = []
 
-        heap = [(0, k)]
+        heapq.heappush(heap, (0, k))
 
-        while heap:
-            current = heapq.heappop(heap)
+        visited = set(heap)
 
-            if current[1] in visited:
-                continue
+        while len(heap) > 0:
+            dist, root = heapq.heappop(heap)
+            
+            for edge in edges.get(root):
+                d_u = distances.get(root)
+                d_v = distances.get(edge[0])
+                c_uv = edge[1]
 
-            visited.add(current[1])
+                if d_u + c_uv < d_v:
+                    distances[edge[0]] = d_u + c_uv
 
-            for edge in outgoingEdges.get(current[1]):
-                
-                if distances.get(edge[0]) + edge[2] < distances.get(edge[1]):
-                    distances[edge[1]] = distances.get(edge[0]) + edge[2]
-                
-                heapq.heappush(heap, (distances.get(edge[1]), edge[1]))
+                if (distances.get(edge[0]), edge[0]) not in visited:
+                    heapq.heappush(heap, (distances.get(edge[0]), edge[0]))
+                    visited.add((distances.get(edge[0]), edge[0]))
 
-
-        if len(visited) != n:
+        minTime = max(distances.values())
+        if minTime == float('inf'):
             return -1
-        
-        return max(list(distances.values()))
+
+        return minTime
+            
