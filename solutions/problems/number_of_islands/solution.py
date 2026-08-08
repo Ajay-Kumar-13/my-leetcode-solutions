@@ -1,38 +1,41 @@
 from collections import deque
 
-class Solution(object):
-    def numIslands(self, grid):
-        """
-        :type grid: List[List[str]]
-        :rtype: int
-        """
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
         
+
         m = len(grid)
         n = len(grid[0])
 
-        count = 0
+        totalIslands = 0
+
+        visited = set([])
 
         for i in range(m):
             for j in range(n):
-                if grid[i][j] == "1":
-                    count += 1
-                    q = deque([[i,j]])
-                    grid[i][j] = '0'
-
+                if grid[i][j] == "1" and (i, j) not in visited:
+                    totalIslands += 1
+                    q = deque([(i, j)])
                     while len(q) > 0:
-                        u, d = q.popleft()
-                        
-                        if u < m-1 and grid[u+1][d] == "1":
-                            q.append([u+1,d])
-                            grid[u+1][d] = '0'
-                        if d < n-1 and grid[u][d+1] == "1":
-                            q.append([u,d+1])
-                            grid[u][d+1] = '0'
-                        if u > 0 and grid[u-1][d] == "1":     
-                            q.append([u-1,d])
-                            grid[u-1][d] = '0'
-                        if d > 0 and grid[u][d-1] == "1":
-                            q.append([u,d-1])
-                            grid[u][d-1] = '0'
+                        d, r = q.popleft()
 
-        return count
+                        if r < n-1 and grid[d][r+1] == "1":
+                            q.append((d, r+1))
+                            visited.add((d, r+1))
+                            grid[d][r+1] = "0"
+                        
+                        if d < m-1 and grid[d+1][r] == "1":
+                            q.append((d+1, r))
+                            visited.add((d+1, r))
+                            grid[d+1][r] = "0"
+
+                        if r > 0 and grid[d][r-1] == "1":
+                            q.append((d, r-1))
+                            visited.add((d, r-1))
+                            grid[d][r-1] = "0"
+
+                        if d > 0 and grid[d-1][r] == "1":
+                            q.append((d-1, r))
+                            visited.add((d-1, r))
+                            grid[d-1][r] = "0"
+        return totalIslands
