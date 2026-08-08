@@ -1,42 +1,45 @@
 from collections import deque
 
-class Solution(object):
-    def canFinish(self, numCourses, prerequisites):
-        """
-        :type numCourses: int
-        :type prerequisites: List[List[int]]
-        :rtype: bool
-        """
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         
-        # BFS
-        incomingNodes = {}  
-        edgesOfNodes = {}
-        noIncomingNodes = {}
+        outgoing = {}
+        incoming = {}
 
         for i in range(numCourses):
-            noIncomingNodes[i] = i
-        
-        for e in prerequisites:
-            incomingNodes.setdefault(e[0], []).append(e[1])
-            edgesOfNodes.setdefault(e[1], []).append(e[0])
-            if noIncomingNodes.get(e[0], None) is not None:
-                del noIncomingNodes[e[0]]
+            incoming[i] = 0
 
-        zeroIncomingEdges = deque(list(noIncomingNodes.values()))
-
-        visited = set(zeroIncomingEdges)
-
-        totalUnlockedCourses = 0
-
-        while len(zeroIncomingEdges) > 0:
-            course = zeroIncomingEdges.popleft()
-            totalUnlockedCourses += 1
-            edge = edgesOfNodes.get(course, [])
-        
-            for e in edge:
-                incomingNodes.get(e).pop()
-                if not incomingNodes.get(e) and e not in visited:
-                    zeroIncomingEdges.append(e)
-                    visited.add(e)
+        for edge in prerequisites:
+            outgoing.setdefault(edge[1], []).append(edge[0])
             
-        return totalUnlockedCourses == numCourses
+            incoming[edge[0]] = incoming.get(edge[0], 0)+1
+            if incoming.get(edge[1], None) is None:
+                incoming[edge[1]] = 0
+
+
+        q = deque([])
+        finishedCourses = 0
+
+        for k,v in incoming.items():
+            if v == 0:
+                q.append(k)
+
+        while len(q) > 0:
+            edge = q.popleft()
+            finishedCourses += 1
+            outgoingEdges = outgoing.get(edge, [])
+
+            while len(outgoingEdges) > 0:
+                edge = outgoingEdges.pop()
+
+                count = incoming.get(edge, 0)
+                if count > 0:
+                    incoming[edge] = incoming.get(edge) - 1
+                    if incoming.get(edge) == 0:
+                        q.append(edge)
+
+        print(finishedCourses)
+        if finishedCourses == numCourses:
+            return True
+
+        return False
