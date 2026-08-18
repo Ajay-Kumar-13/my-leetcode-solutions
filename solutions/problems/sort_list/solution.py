@@ -1,61 +1,56 @@
 # Definition for singly-linked list.
-# class ListNode(object):
+# class ListNode:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-class Solution(object):
-    def sortList(self, head):
-        """
-        :type head: Optional[ListNode]
-        :rtype: Optional[ListNode]
-        """
+class Solution:
+    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        
         def mergeSort(head):
     
-            if not head or head.next is None:
+            if head is None or head.next is None:
                 return head
-                
-            mid = head
-            fast = head.next
             
-            while fast and fast.next:
-                mid = mid.next
+            slow = head
+            fast = head
+            
+            while fast.next and fast.next.next:
+                slow = slow.next
                 fast = fast.next.next
                 
+            head2 = slow.next
+            slow.next = None
             
-            r_chain = mid.next
-            mid.next = None
+            L = mergeSort(head)
+            R = mergeSort(head2)
             
-            left = mergeSort(head)
-            right = mergeSort(r_chain)
-
             dummy = ListNode(0)
             tail = dummy
             
-            while left and right:
-                if left.val >= right.val and left != right:
-                    temp = right.next
-                    tail.next = right
+            while L and R:
+                if L.val <= R.val:
+                    newNode = ListNode(L.val)
+                    L = L.next
+                    tail.next = newNode
                     tail = tail.next
-                    tail.next = None
-                    right = temp
                 else:
-                    temp = left.next
-                    tail.next = left
+                    newNode = ListNode(R.val)
+                    R = R.next
+                    tail.next = newNode
                     tail = tail.next
-                    tail.next = None
-                    left = temp
-                    
-            while left:
-                tail.next = left
+            
+            while L:
+                newNode = ListNode(L.val)
+                L = L.next
+                tail.next = newNode
                 tail = tail.next
-                left = left.next
                 
-            while right:
-                tail.next = right
+            while R:
+                newNode = ListNode(R.val)
+                R = R.next
+                tail.next = newNode
                 tail = tail.next
-                right = right.next
-                    
+                
             return dummy.next
-
-        head = mergeSort(head)
-        return head
+        
+        return mergeSort(head)
