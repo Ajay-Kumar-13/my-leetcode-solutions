@@ -1,43 +1,35 @@
 from collections import deque
 
-class Solution(object):
+class Solution():
     def ladderLength(self, beginWord, endWord, wordList):
-        """
-        :type beginWord: str
-        :type endWord: str
-        :type wordList: List[str]
-        :rtype: int
-        """
 
-        graph = {}
+        if endWord not in wordList:
+            return 0
+        
         wordList.append(beginWord)
-        wordList = set(wordList)
-        def buildGraph(wordList):
-            for word in wordList:
-                for j in range(len(word)):
-                    pattern = word[:j] + "*" + word[j+1:]
-                    graph.setdefault(pattern, set([])).add(word)
-
-        buildGraph(wordList)
+        wordList = list(set(wordList))
+        
+        wordDict = {}
+        
+        for word in wordList:
+            for i in range(len(word)):
+                w = word[:i]+"*"+word[i+1:]
+                wordDict.setdefault(w, []).append(word)
 
         q = deque([(beginWord, 1)])
         visited = set([beginWord])
-        
-        while len(q) > 0:
-            current, count = q.popleft()
 
-            for i in range(len(current)):
-                pattern = current[:i]+'*'+current[i+1:]
-                children = graph.get(pattern)
-                
-                for child in children:
-                    if child == endWord:
-                        return count+1
-                    if child not in visited:
-                        q.append((child, count+1))
-                        visited.add(child)
+        while len(q) > 0:
+            word, ind = q.popleft()
+
+            if word == endWord:
+                return ind
+
+            for i in range(len(word)):
+                w = word[:i]+"*"+word[i+1:]
+                for n in wordDict.get(w, []):
+                    if n not in visited:
+                        q.append((n, ind+1))
+                        visited.add(n)
 
         return 0
-
-            
-
