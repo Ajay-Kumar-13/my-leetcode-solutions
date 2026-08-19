@@ -1,50 +1,46 @@
 from collections import deque
 
-class Solution(object):
-    def pacificAtlantic(self, heights):
-        """
-        :type heights: List[List[int]]
-        :rtype: List[List[int]]
-        """
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:   
 
         m = len(heights)
         n = len(heights[0])
-        
-        pacific = deque([])
-        atlantic = deque([])
 
+        pacific_border = []
+        atlantic_border = []
 
         for i in range(n):
-            pacific.append((0, i))
+            pacific_border.append((0, i))
 
         for i in range(1, m):
-            pacific.append((i, 0))
-
-        for i in range(m):
-            atlantic.append((i, n-1))
+            pacific_border.append((i, 0))
 
         for i in range(n-1):
-            atlantic.append((m-1, i))
+            atlantic_border.append((m-1, i))
+        
+        for i in range(m):
+            atlantic_border.append((i, n-1))
 
-        def findPath(q):
-            visited =set(q)
+        def findSol(que):
+            q = deque(que)
+            visited = set(que)
 
             while len(q) > 0:
-                x, y = q.popleft()
-                
-                if y < n-1 and heights[x][y] <= heights[x][y+1] and (x, y+1) not in visited:
-                    q.append((x, y+1))
-                    visited.add((x, y+1))
-                if y > 0 and heights[x][y] <= heights[x][y-1] and (x, y-1) not in visited:
-                    q.append((x, y-1))
-                    visited.add((x, y-1))
-                if x < m-1 and heights[x][y] <= heights[x+1][y] and (x+1, y) not in visited:
-                    q.append((x+1, y))
-                    visited.add((x+1, y))
-                if x > 0 and heights[x][y] <= heights[x-1][y] and (x-1, y) not in visited:
-                    q.append((x-1, y))
-                    visited.add((x-1, y))
-    
+                i, j = q.popleft()
+
+                if j < n-1 and heights[i][j] <= heights[i][j+1] and (i, j+1) not in visited:
+                    q.append((i, j+1))
+                    visited.add((i, j+1))
+                if j > 0 and heights[i][j] <= heights[i][j-1] and (i, j-1) not in visited:
+                    q.append((i, j-1))
+                    visited.add((i, j-1))
+                if i > 0 and heights[i][j] <= heights[i-1][j] and (i-1, j) not in visited:
+                    q.append((i-1, j))
+                    visited.add((i-1, j))
+                if i < m-1 and heights[i][j] <= heights[i+1][j] and (i+1, j) not in visited:
+                    q.append((i+1, j))
+                    visited.add((i+1, j))
+
             return visited
 
-        return list(findPath(pacific).intersection(findPath(atlantic)))
+        return list(findSol(pacific_border).intersection(findSol(atlantic_border)))
