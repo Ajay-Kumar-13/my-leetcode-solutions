@@ -1,28 +1,25 @@
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+    def wordBreak(self, s, wordDict):
+        
+        words = {}
+        
+        def validateDict(s):
 
-        l = len(s)
+            if s in words:
+                return words[s]
 
-        dp = []
+            if not s:
+                return True
 
-        current_string = ""
+            word = ""
+            for i in range(len(s)):
+                word += s[i]
+                if word in wordDict:
+                    if validateDict(s[i+1:]):
+                        words[s[:i]] = True
+                        return True
 
-        for i in range(l):
-            current_string += s[i]
-            j = i-1
-            
-            found = False
+            words[s] = False
+            return False
 
-            while len(dp) > 0 and j >= 0:
-                if dp[j] is True:
-                    if s[j+1:i+1] in wordDict:
-                        found = True
-                        break
-                j -= 1
-                
-            if s[j+1:i+1] in wordDict:
-                found = True
-            
-            dp.append(found)
-
-        return dp[-1]
+        return validateDict(s)
