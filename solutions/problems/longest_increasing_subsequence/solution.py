@@ -1,15 +1,13 @@
 class Solution:
-    def lengthOfLIS(self, nums: List[int]) -> int:
-    
-        dp = [1]
+    def lengthOfLIS(self, nums):
         
-        for i in range(1, len(nums)):
-            j = i-1
-            total = 1
-            while j >= 0:
-                if nums[i] > nums[j]:
-                    total = max(total, 1 + dp[j])
-                j -= 1
-            dp.append(total)
-        
+        dp = []
+        for i in range(len(nums)):
+            count = 0
+            for j in range(i-1, -1, -1):
+                if nums[j] < nums[i]:
+                    count = max(count, dp[j])
+                    
+            dp.append(1 + count)
+            
         return max(dp)
