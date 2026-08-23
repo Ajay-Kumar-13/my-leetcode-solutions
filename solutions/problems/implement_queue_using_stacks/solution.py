@@ -1,45 +1,38 @@
-class MyQueue(object):
+class MyQueue:
 
     def __init__(self):
-        self.q = []
         self.s1 = []
-        self.s2 = []
+        self.s2  = []
+        self.top = 0
 
-    def push(self, x):
-        """
-        :type x: int
-        :rtype: None
-        """
-        # Push all the elements in s1 to s2
+    def push(self, x: int) -> None:
+        if not self.s1:
+            self.top = x
+
+        self.s1.append(x)
+
+    def pop(self) -> int:
         while len(self.s1) > 0:
             self.s2.append(self.s1.pop())
-            
-        # push x into s1
-        self.s1.append(x)
-        
-        # bring back all the elements from s2
+
+        val = self.s2.pop()
+
         while len(self.s2) > 0:
-            self.s1.append(self.s2.pop())
+            x = self.s2.pop()
+            if not self.s1:
+                self.top = x
+            self.s1.append(x)
 
-    def pop(self):
-        """
-        :rtype: int
-        """
-        return self.s1.pop()
+        return val
 
-    def peek(self):
-        """
-        :rtype: int
-        """
-        return self.s1[-1]
+    def peek(self) -> int:
+        return self.top
 
-    def empty(self):
-        """
-        :rtype: bool
-        """
-        return (len(self.s1) == 0 and len(self.s2) == 0)
+    def empty(self) -> bool:
+        if not self.s1:
+            return True
         
-        
+        return False
 
 
 # Your MyQueue object will be instantiated and called as such:
