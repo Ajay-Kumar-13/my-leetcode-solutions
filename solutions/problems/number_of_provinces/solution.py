@@ -1,42 +1,29 @@
-class Solution(object):
+class Solution:
     def findCircleNum(self, isConnected):
-        """
-        :type isConnected: List[List[int]]
-        :rtype: int
-        """
         
         roots = {}
-
-        for i in range(1, len(isConnected)+1):
+        
+        for i in range(len(isConnected)):
             roots[i] = i
-
+            
         def findRoot(x):
+            if x == roots.get(x):
+                return x
+                
+            return findRoot(roots.get(x))
+            
+        m = len(isConnected)
+        n = len(isConnected[0])
+        
+        for i in range(m):
+            for j in range(n):
+                if isConnected[i][j] == 1:
+                    x = findRoot(i)
+                    y = findRoot(j)
 
-            while x != roots.get(x):
-                x = roots.get(x)
-
-            return x
-
-        edges = 0
-
-        for i,edge in enumerate(isConnected):
-            left = 0
-            right = 0
-            for j in range(len(isConnected)):
-                if isConnected[i][j] == 1 and not left:
-                    left = j + 1
-                elif isConnected[i][j] == 1 and not right:
-                    right = j + 1
-
-                if left and right:
-                    x = findRoot(left)
-                    y = findRoot(right)
-
-                    if x != y:
-                        edges += 1
-
-                    roots[x] = y
-                    left = right
-                    right = 0
-
-        return len(isConnected) - edges
+                    roots[y] = x
+                    
+        for k, v in roots.items():
+            roots[k] = findRoot(v)
+            
+        return len(set(roots.values()))
