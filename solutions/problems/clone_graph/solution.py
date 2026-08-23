@@ -1,46 +1,44 @@
 """
 # Definition for a Node.
-class Node(object):
+class Node:
     def __init__(self, val = 0, neighbors = None):
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
 """
 
 from collections import deque
-
-class Solution(object):
-
-    def cloneGraph(self, node):
-        """
-        :type node: Node
-        :rtype: Node
-        """
-
+from typing import Optional
+class Solution:
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        
         if not node:
             return node
 
-        # BFS
-        q = deque([node])
+        nodes = {}
 
-        nodes = {} 
+        root = Node(node.val)
+        nodes[node.val] = root
+
+        q = deque(node.neighbors)
+
+        visited = set(map(lambda x: x.val, node.neighbors))
 
         while len(q) > 0:
-            currentNode = q.popleft()
 
-            nd = nodes.get(currentNode.val, None)
+            node = q.popleft()
 
-            if not nd:
-                nd = Node(currentNode.val, [])
-                nodes[currentNode.val] = nd
+            if node.val not in nodes:
+                nodes[node.val] = Node(node.val)
 
-            for n in currentNode.neighbors:
+            for child in node.neighbors:
+                if child.val not in nodes:
+                    nodes[child.val] = Node(child.val)
                 
-                neighbourNode = nodes.get(n.val, None)
-                if not neighbourNode:
-                    neighbourNode = Node(n.val, [])    
-                    nodes[neighbourNode.val] = neighbourNode
-                    q.append(n)
-                
-                nd.neighbors.append(neighbourNode)
+                parent = nodes.get(child.val)
+                parent.neighbors.append(nodes.get(node.val))
 
-        return nodes[node.val]
+                if child.val not in visited:
+                    q.append(child)
+                    visited.add(child.val)
+
+        return root
