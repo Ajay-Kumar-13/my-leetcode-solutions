@@ -1,49 +1,37 @@
-class MyStack(object):
+class MyStack:
 
     def __init__(self):
-        self.s = []
         self.q1 = []
         self.q2 = []
+        self.topEle = 0
+
+    def push(self, x: int) -> None:
         
-
-    def push(self, x):
-        """
-        :type x: int
-        :rtype: None
-        """
-
-        # push all the elements from q1 to q2
-        while len(self.q1) > 0:
-            self.q2.append(self.q1.pop(0))
-
-        # add x to q1
         self.q1.append(x)
+        self.topEle = x
 
-        # bring back all the elements from s2
+    def pop(self) -> int:
+        val  = 0
+
+        while len(self.q1) > 0:
+            val = 0
+            if len(self.q1) == 1:
+                val = self.q1.pop(0)
+            else:
+                self.q2.append(self.q1.pop(0))
 
         while len(self.q2) > 0:
+            if len(self.q2) == 1:
+                self.topEle = self.q2[0]
             self.q1.append(self.q2.pop(0))
 
-        
+        return val
 
-    def pop(self):
-        """
-        :rtype: int
-        """
-        return self.q1.pop(0)
+    def top(self) -> int:
+        return self.topEle
 
-    def top(self):
-        """
-        :rtype: int
-        """
-        return self.q1[0]
-
-    def empty(self):
-        """
-        :rtype: bool
-        """
-        return len(self.q1) == 0 and len(self.q2) == 0
-        
+    def empty(self) -> bool:
+        return len(self.q1) == 0
 
 
 # Your MyStack object will be instantiated and called as such:
